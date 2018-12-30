@@ -20,6 +20,9 @@ class SitesAvailabilityConfig(object):
     def get_all_sites(self):
         return self.all_sites_with_availability.keys()
 
+    def get_all_blocked_sites_for(self, time):
+        return set(filter(lambda url: self.is_site_blocked_in_time(url, time), self.get_all_sites()))
+
     def is_site_blocked_in_time(self, url, time):
         availability = self.all_sites_with_availability[url]
         if not availability:

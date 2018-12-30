@@ -1,16 +1,8 @@
-import platform
+from platform_dependent import detect_path_to_host_file, reset_dns
 
-BLOCK_LINE_FORMAT = "%s    %s\n"
+BLOCK_LINE_FORMAT = "%s    %s #cat_blocker\n"
 
 default_redirect = "localhost"
-
-
-def detect_path_to_host_file():
-    system = platform.system()
-    if system == "Windows": return "C:\Windows\System32\drivers\etc\hosts"
-    if system == "Darwin": return "/etc/hosts"
-    if system == "Linux": return "/etc/hosts"
-    raise Exception("Unknown platform: " + system)
 
 
 class HostsFileFacade(object):
@@ -36,6 +28,17 @@ class HostsFileFacade(object):
                 if len(list(filter(lambda x: x in line, urls))) == 0:
                     hosts.write(line)
             hosts.truncate()
+
+    def get_currently_blocked_sites(self):
+        blocked = set()
+        with open(self.path, "r+") as hosts:
+            for line in hosts.readlines():
+                if "#cat_blocker" in line:
+                    blocked.add(line.split("    ")[1].split(" ")[0])
+        return blocked
+
+    def restart_networking(self):
+        reset_dns()
 
     def is_blocked(self, url):
         with open(self.path, "r+") as hosts:
