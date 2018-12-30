@@ -1,16 +1,18 @@
 import json
 from datetime import datetime
 
+DEFAULT_CONFIG_PATH = "config.json"
+
 AVAILABLE_ELEMENT = "available"
 WEBSITES_ELEMENT = "websites"
 ROOT_ELEMENT_NAME = "configs"
 
 
 class SitesAvailabilityConfig(object):
-    def __init__(self, config_file_path="config.json"):
-        with open(config_file_path, "r") as config:
-            self.raw_configs = json.load(config)
-            self.all_sites_with_availability = __get_all_sites_with_availability__(self.raw_configs)
+    def __init__(self, config_file_path=DEFAULT_CONFIG_PATH):
+        self.raw_configs = None
+        self.all_sites_with_availability = None
+        self.update_config(config_file_path)
 
     def print(self):
         print(self.all_sites_with_availability)
@@ -31,6 +33,11 @@ class SitesAvailabilityConfig(object):
 
     def has_site(self, url):
         return url in self.all_sites_with_availability.keys()
+
+    def update_config(self, config_file_path=DEFAULT_CONFIG_PATH):
+        with open(config_file_path, "r") as config:
+            self.raw_configs = json.load(config)
+            self.all_sites_with_availability = __get_all_sites_with_availability__(self.raw_configs)
 
 
 def __get_all_sites_with_availability__(raw_configs):

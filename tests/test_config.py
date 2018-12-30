@@ -1,6 +1,6 @@
 import unittest
 import os
-from hamcrest import assert_that, equal_to, is_, has_items, is_not
+from hamcrest import assert_that, equal_to, is_, has_items, has_item, is_not
 from config import SitesAvailabilityConfig
 from datetime import datetime
 
@@ -53,6 +53,31 @@ class TestConfig(unittest.TestCase):
     def test_should_have_site(self):
         assert_that(self.config.has_site("www.wp.pl"), is_(True))
         assert_that(self.config.has_site("www.onet.pl"), is_(False))
+
+    def should_update_config(self):
+        # given
+        updated = """
+        {
+          "configs": [
+            {
+              "websites": [
+                "www.demotywatory.pl",
+              ],
+              "available": [
+                "5:00-6:00",
+              ]
+            }
+          ]
+        }
+        """
+        with open(TEST_CONFIG_NAME, "w") as config:
+            config.write(updated)
+
+        # when
+        self.config.update_config(TEST_CONFIGURATION_JSON)
+
+        # then
+        assert_that(self.config.get_all_sites(), has_item("www.demotywatory.pl"))
 
 
 def to_time(time_str):
