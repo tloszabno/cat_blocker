@@ -18,25 +18,25 @@ class TestHostsFacade(unittest.TestCase):
 
     def test_should_add_url_to_hosts_with_localhost_mapping(self):
         #when
-        self.facade.block_url(["wp.pl"])
+        self.facade.block_sites(["wp.pl"])
 
         #then
         assert_that(content_of_hosts(), has_item("localhost    wp.pl\n"))
 
     def test_should_add_url_to_hosts_with_localhost_mapping_only_once(self):
         #when
-        self.facade.block_url(["wp.pl"])
-        self.facade.block_url(["wp.pl"])
+        self.facade.block_sites(["wp.pl"])
+        self.facade.block_sites(["wp.pl"])
 
         #then
         assert_that(content_of_hosts().count("localhost    wp.pl\n"), equal_to(1))
 
     def test_should_delete_url_from_hosts(self):
         #given
-        self.facade.block_url(["wp.pl", "onet.pl"])
+        self.facade.block_sites(["wp.pl", "onet.pl"])
 
         #when
-        self.facade.unblock_url(["wp.pl"])
+        self.facade.unblock_sites(["wp.pl"])
 
         #then
         assert_that(content_of_hosts(), is_not(has_item("localhost    wp.pl\n")))
@@ -44,7 +44,7 @@ class TestHostsFacade(unittest.TestCase):
 
     def test_should_contain_blocked_url(self):
         #given
-        self.facade.block_url(["wp.pl", "onet.pl"])
+        self.facade.block_sites(["wp.pl", "onet.pl"])
 
         #when
         blocked_wp = self.facade.is_blocked("wp.pl")

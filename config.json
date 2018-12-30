@@ -1,0 +1,17 @@
+{
+  "configs": [
+    {
+      "websites": [
+        "www.wp.pl",
+        "www.facebook.com",
+        "www.onet.pl",
+        "www.demotywatory.pl",
+        "www.jzdz.pl"
+      ],
+      "available": [
+        "5:00-6:00",
+        "22:00-23:00"
+      ]
+    }
+  ]
+}

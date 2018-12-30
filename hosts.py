@@ -1,6 +1,6 @@
 import platform
 
-BLOCK_LINKE_FORMAT = "%s    %s\n"
+BLOCK_LINE_FORMAT = "%s    %s\n"
 
 default_redirect = "localhost"
 
@@ -17,7 +17,7 @@ class HostsFileFacade(object):
     def __init__(self, hosts_file_path_resolver=detect_path_to_host_file):
         self.path = hosts_file_path_resolver()
 
-    def block_url(self, urls):
+    def block_sites(self, urls):
         urls = set(urls)
         with open(self.path, "r+") as hosts:
             hosts_content = hosts.read()
@@ -25,10 +25,9 @@ class HostsFileFacade(object):
                 hosts.write("\n")
             for url in urls:
                 if url not in hosts_content:
-                    hosts.write(BLOCK_LINKE_FORMAT % (default_redirect, url))
+                    hosts.write(BLOCK_LINE_FORMAT % (default_redirect, url))
 
-
-    def unblock_url(self, urls):
+    def unblock_sites(self, urls):
         urls = set(urls)
         with open(self.path, "r+") as hosts:
             hosts_content = hosts.readlines()
@@ -40,4 +39,4 @@ class HostsFileFacade(object):
 
     def is_blocked(self, url):
         with open(self.path, "r+") as hosts:
-            return BLOCK_LINKE_FORMAT % (default_redirect, url) in hosts.read()
+            return BLOCK_LINE_FORMAT % (default_redirect, url) in hosts.read()
